@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { signInAsync, selectAuth } from '../../slices/auth'
@@ -8,7 +9,7 @@ import ListErrors from '../../components/ListErrors/ListErrors'
 
 const LoginPage = ({ location }) => {
   const dispatch = useDispatch()
-  const { errorMessage } = useSelector(selectAuth)
+  const { errors } = useSelector(selectAuth)
 
   const [credentials, setCredentials] = useState({
     email: '',
@@ -46,7 +47,7 @@ const LoginPage = ({ location }) => {
               </Link>
             </p>
 
-            <ListErrors errors={errorMessage} />
+            <ListErrors errors={errors} />
 
             <form onSubmit={handleSubmit} noValidate>
               <fieldset>
@@ -86,6 +87,10 @@ const LoginPage = ({ location }) => {
       </div>
     </div>
   )
+}
+
+LoginPage.propTypes = {
+  location: PropTypes.object.isRequired,
 }
 
 export default LoginPage

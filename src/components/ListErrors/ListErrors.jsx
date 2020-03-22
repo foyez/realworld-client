@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const ListErrors = ({ errors }) => {
   return errors ? (
@@ -12,6 +13,10 @@ const ListErrors = ({ errors }) => {
       })}
     </ul>
   ) : null
+}
+
+ListErrors.propTypes = {
+  errors: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.object]),
 }
 
 export default ListErrors

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const initialState = {
   currentUser: null,
-  errorMessage: '',
+  errors: null,
 }
 
 const authSlice = createSlice({
@@ -12,19 +12,29 @@ const authSlice = createSlice({
   reducers: {
     authSuccess: (state, { payload }) => {
       state.currentUser = payload.user
-      state.errorMessage = ''
+      state.errors = null
     },
     authFailure: (state, { payload }) => {
       state.currentUser = null
-      state.errorMessage = payload
+      state.errors = payload
+    },
+    logout: state => {
+      state.currentUser = null
+      state.errors = null
     },
   },
 })
 
 const { actions, reducer } = authSlice
-const { authSuccess, authFailure } = actions
+export const { authSuccess, authFailure, logout } = actions
 
 export const selectAuth = state => state.auth
+
+const handleAuthErrors = error => {
+  const { response, message } = error
+
+  return response ? response.data.errors : { [message]: 'connect your internet connection' }
+}
 
 export const signInAsync = ({ email, password }) => async dispatch => {
   try {
@@ -32,14 +42,9 @@ export const signInAsync = ({ email, password }) => async dispatch => {
 
     dispatch(authSuccess(res.data))
   } catch (error) {
-    const { response, message } = error
-    let errorMessage
+    const errors = handleAuthErrors(error)
 
-    errorMessage = response
-      ? response.data.errors
-      : { [message]: 'connect your internet connection' }
-
-    dispatch(authFailure(errorMessage))
+    dispatch(authFailure(errors))
   }
 }
 
@@ -49,14 +54,24 @@ export const registerAsync = ({ username, email, password }) => async dispatch =
 
     dispatch(authSuccess(res.data))
   } catch (error) {
-    const { response, message } = error
-    let errorMessage
+    const errors = handleAuthErrors(error)
 
-    errorMessage = response
-      ? response.data.errors
-      : { [message]: 'connect your internet connection' }
+    dispatch(authFailure(errors))
+  }
+}
 
-    dispatch(authFailure(errorMessage))
+export const isUserAuthenticated = () => async dispatch => {
+  try {
+    const token = await window.localStorage.getItem('jwt')
+    if (!token) return
+    await Axios.setToken(token)
+    const res = await Axios.Auth.current()
+
+    dispatch(authSuccess(res.data))
+  } catch (error) {
+    const errors = handleAuthErrors(error)
+
+    dispatch(authFailure(errors))
   }
 }
 

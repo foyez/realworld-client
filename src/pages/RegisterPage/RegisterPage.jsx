@@ -8,7 +8,7 @@ import ListErrors from '../../components/ListErrors/ListErrors'
 
 const RegisterPage = () => {
   const dispatch = useDispatch()
-  const { errorMessage } = useSelector(selectAuth)
+  const { errors } = useSelector(selectAuth)
 
   const [credentials, setCredentials] = useState({
     username: '',
@@ -40,7 +40,7 @@ const RegisterPage = () => {
               <Link to="/login">Have an account?</Link>
             </p>
 
-            <ListErrors errors={errorMessage} />
+            <ListErrors errors={errors} />
 
             <form onSubmit={handleSubmit} noValidate>
               <fieldset>
