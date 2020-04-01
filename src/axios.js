@@ -9,7 +9,7 @@ const axios = Axios.create({
 let token = null
 const authHeader = () => {
   if (token) {
-    console.log(token)
+    // console.log(token)
     return (axios.defaults.headers.common['Authorization'] = `Bearer ${token}`)
   }
 
@@ -23,7 +23,12 @@ const Auth = {
     axios.post('/users', { user: { username, email, password } }),
 }
 
+const Articles = {
+  all: () => axios.get('/articles?limit=10'),
+}
+
 export default {
+  Articles,
   Auth,
   setToken: _token => {
     token = _token

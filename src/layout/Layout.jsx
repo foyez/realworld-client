@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { useDispatch } from 'react-redux'
@@ -9,9 +9,9 @@ import Navigation from '../components/Navigation/Navigation'
 const Layout = ({ children }) => {
   const dispatch = useDispatch()
 
-  useState(() => {
+  useEffect(() => {
     dispatch(isUserAuthenticated())
-  }, [])
+  }, [dispatch])
 
   return (
     <>

@@ -63,7 +63,8 @@ export const registerAsync = ({ username, email, password }) => async dispatch =
 export const isUserAuthenticated = () => async dispatch => {
   try {
     const token = await window.localStorage.getItem('jwt')
-    if (!token) return
+    if (!token) return dispatch(logout())
+
     await Axios.setToken(token)
     const res = await Axios.Auth.current()
 
